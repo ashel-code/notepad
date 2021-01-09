@@ -46,7 +46,7 @@ namespace notepad
 
         public string Password
         {
-            get { return passwordTextBox.Text; }
+            get { return passwordTextBox.Password; }
         }
 
         private void closeFunc(object sender, System.ComponentModel.CancelEventArgs e)
@@ -55,11 +55,6 @@ namespace notepad
             {
                 e.Cancel = true;
             }
-        }
-
-        private void passwordTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
     }
 }
