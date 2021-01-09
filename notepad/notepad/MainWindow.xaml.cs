@@ -105,6 +105,38 @@ namespace notepad
             }
         }
 
+        private void kegelChanged()
+        {
+            if (kegelTextBox.Text != "" && kegelTextBox.Text != "0")
+            {
+
+                try
+                {
+                    if (Convert.ToInt32(kegelTextBox.Text) < 100)
+                    {
+                        kegel = Convert.ToInt32(kegelTextBox.Text);
+                        mainRichTextBox.FontSize = kegel;
+                    }
+                    else
+                    {
+                        kegelTextBox.Text = Convert.ToString(kegel);
+                        mainRichTextBox.FontSize = kegel;
+                    }
+
+                }
+                catch
+                {
+                    kegelTextBox.Text = Convert.ToString(kegel);
+                    mainRichTextBox.FontSize = kegel;
+                }
+            }
+            else
+            {
+                kegelTextBox.Text = "1";
+                mainRichTextBox.FontSize = 1;
+            }
+        }
+
         private void saveButton_Click(object sender, RoutedEventArgs e)                            // сохранить
         {
             saveFunc();
@@ -229,34 +261,7 @@ namespace notepad
 
         private void kegelTextBox_TextChanged(object sender, TextChangedEventArgs e)               // изменение текста
         {
-            if (kegelTextBox.Text != "" && kegelTextBox.Text != "0")
-            {
-                
-                try
-                {
-                    if (Convert.ToInt32(kegelTextBox.Text) < 100)
-                    {
-                        kegel = Convert.ToInt32(kegelTextBox.Text);
-                        mainRichTextBox.FontSize = kegel;                        
-                    }
-                    else
-                    {
-                        kegelTextBox.Text = Convert.ToString(kegel);
-                        mainRichTextBox.FontSize = kegel;
-                    }
-
-                }
-                catch
-                {
-                    kegelTextBox.Text = Convert.ToString(kegel);
-                    mainRichTextBox.FontSize = kegel;
-                }
-            }
-            else
-            {
-                kegelTextBox.Text = "1";
-                mainRichTextBox.FontSize = 1;
-            }
+            kegelChanged();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -286,12 +291,16 @@ namespace notepad
 
         private void kegelPlus_Click(object sender, RoutedEventArgs e)
         {
-
+            kegel++;
+            kegelChanged();
         }
 
         private void kegelMinus_Click(object sender, RoutedEventArgs e)
         {
+            kegel--;
 
+            MessageBox.Show(Convert.ToString(kegel));
+            kegelChanged();
         }
 
         private void firstFont_Checked(object sender, RoutedEventArgs e)
