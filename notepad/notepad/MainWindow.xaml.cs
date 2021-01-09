@@ -26,12 +26,12 @@ namespace notepad
     class TextDoc // объект текстового документа
     {
         public string text { get; set; }
-        public int kegel { get; set; }
+        public double kegel { get; set; }
         public int font { get; set; }
         public bool isEncrypted { get; set; }
         public string password { get; set; }
 
-        public TextDoc (string text, int kegel, int font, bool isEncrypted)
+        public TextDoc (string text, double kegel, int font, bool isEncrypted)
         {
             this.text = text;
             this.kegel = kegel;
@@ -39,7 +39,7 @@ namespace notepad
             this.isEncrypted = isEncrypted;
         }
 
-        public TextDoc(string text, int kegel, int font, bool isEncrypted, string password)
+        public TextDoc(string text, double kegel, int font, bool isEncrypted, string password)
         {
             this.text = text;
             this.kegel = kegel;
@@ -51,9 +51,11 @@ namespace notepad
 
     public partial class MainWindow : Window
     {
-        int kegel = 15;
-        int font = 0;
+        bool isEncrypted;
+        double kegel = 15;
+        int font = 1;
         string password = "";
+        TextDoc doc;
         BinaryFormatter formatter = new BinaryFormatter();
 
         public MainWindow()
@@ -70,9 +72,10 @@ namespace notepad
 
             if (saveFileDialog.ShowDialog() == true)
             {
+                string txt = new TextRange(mainRichTextBox.Document.ContentStart, mainRichTextBox.Document.ContentEnd).Text;
                 if (password != "")
                 {
-                    TextDoc doc = new TextDoc(mainTextBox.Text, kegel, font, true, password); 
+                    TextDoc doc = new TextDoc(txt, kegel, font, true, password); 
                     using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
                     {
                         formatter.Serialize(fs, doc);
@@ -80,7 +83,7 @@ namespace notepad
                 }
                 else
                 {
-                    TextDoc doc = new TextDoc(mainTextBox.Text, kegel, font, false);
+                    TextDoc doc = new TextDoc(txt, kegel, font, false);
                     using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
                     {
                         formatter.Serialize(fs, doc);
@@ -103,11 +106,11 @@ namespace notepad
             {
                 // Open document
                 string filename = openFileDialog.FileName; // установка переменной значения пути
-                mainTextBox.Text = filename; // проверка верности пути
+                // mainTextBox.Text = filename; // проверка верности пути
 
                 using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.OpenOrCreate))
                 {
-                    TextDoc doc = (TextDoc)formatter.Deserialize(fs);
+                    doc = (TextDoc)formatter.Deserialize(fs);
                     if (doc.isEncrypted)
                     {
                         while (true)
@@ -117,28 +120,31 @@ namespace notepad
                                 Window1 passwordWindow = new Window1();
                                 passwordWindow.ShowDialog();
                                 password = passwordWindow.Password;
+                                isEncrypted = true;
                             }
                             catch
                             {
-                                password = "";
+                                // password = "";
+                                isEncrypted = false;
                             }
 
-                            if (password != "")
+                            if (isEncrypted)
                             {
                                 if (password == doc.password)
                                 {
-                                    mainTextBox.Text = doc.text;
-                                    mainTextBox.FontSize = doc.kegel;
+                                    //mainTextBox.Text = doc.text;
+                                    mainRichTextBox.Document.Blocks.Add(new Paragraph(new Run(doc.text)));
+                                    mainRichTextBox.FontSize = doc.kegel;
                                     switch (doc.font)
                                     {
                                         case 1:
-                                            mainTextBox.FontFamily = new FontFamily("Segoe UI");
+                                            mainRichTextBox.FontFamily = new FontFamily("Segoe UI");
                                             break;
                                         case 2:
-                                            mainTextBox.FontFamily = new FontFamily("Ink Free");
+                                            mainRichTextBox.FontFamily = new FontFamily("Ink Free");
                                             break;
                                         case 3:
-                                            mainTextBox.FontFamily = new FontFamily("Source Code Pro Light");
+                                            mainRichTextBox.FontFamily = new FontFamily("Source Code Pro Light");
                                             break;
                                     }
                                     isEncryptedLabel.Content = "зашифрован";
@@ -147,12 +153,11 @@ namespace notepad
                                 }
                                 else
                                 {
-                                    mainTextBox.Text = "пароль неверен";
-                                    mainTextBox.FontSize = 15;
+                                    // mainTextBox.Text = "пароль неверен";
+                                    mainRichTextBox.FontSize = 15;
                                 }
                             }
                         }
-                        password = "";
                     }
                     else
                     {
@@ -192,44 +197,44 @@ namespace notepad
                     if (Convert.ToInt32(kegelTextBox.Text) < 100)
                     {
                         kegel = Convert.ToInt32(kegelTextBox.Text);
-                        mainTextBox.FontSize = kegel;
+                        mainRichTextBox.FontSize = kegel;                        
                     }
                     else
                     {
                         kegelTextBox.Text = Convert.ToString(kegel);
-                        mainTextBox.FontSize = kegel;
+                        mainRichTextBox.FontSize = kegel;
                     }
 
                 }
                 catch
                 {
                     kegelTextBox.Text = Convert.ToString(kegel);
-                    mainTextBox.FontSize = kegel;
+                    mainRichTextBox.FontSize = kegel;
                 }
             }
             else
             {
                 kegelTextBox.Text = "1";
-                mainTextBox.FontSize = 1;
+                mainRichTextBox.FontSize = 1;
             }
         }
 
         private void firstFont_Click(object sender, RoutedEventArgs e)                        // установка первого стиля текста
         {
             font = 1;
-            mainTextBox.FontFamily = new FontFamily("Segoe UI");
+            mainRichTextBox.FontFamily = new FontFamily("Segoe UI");
         }
 
         private void secondFont_Click(object sender, RoutedEventArgs e)                       // установка втрого стиля текста
         {
             font = 2;
-            mainTextBox.FontFamily = new FontFamily("Ink Free");
+            mainRichTextBox.FontFamily = new FontFamily("Ink Free");
         }
 
         private void thirdFont_Click(object sender, RoutedEventArgs e)                        // установка третьего стиля текста
         {
             font = 3;
-            mainTextBox.FontFamily = new FontFamily("Source Code Pro Light");
+            mainRichTextBox.FontFamily = new FontFamily("Source Code Pro Light");
         }
     }
 }

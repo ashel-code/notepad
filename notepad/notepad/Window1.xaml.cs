@@ -25,6 +25,7 @@ namespace notepad
         public bool IsCanceled {
             get { return isCanceled; }
         }
+
         public Window1()
         {
             InitializeComponent();
@@ -40,14 +41,13 @@ namespace notepad
         {
             isButtonPressed = true;
             isCanceled = true;
+            this.Close();
         }
 
         public string Password
         {
             get { return passwordTextBox.Text; }
         }
-
-
 
         private void closeFunc(object sender, System.ComponentModel.CancelEventArgs e)
         {
