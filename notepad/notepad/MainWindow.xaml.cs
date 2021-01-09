@@ -208,7 +208,14 @@ namespace notepad
                                 }
                                 else
                                 {
-                                    MessageBox.Show("введен неверный пароль");
+                                    if (passwordWindow.IsCanceled)
+                                    {
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Введен неверный пароль!");
+                                    }
                                 }
                             }
                         }

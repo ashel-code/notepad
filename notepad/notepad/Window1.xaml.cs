@@ -34,14 +34,14 @@ namespace notepad
         private void confirmButton_Click(object sender, RoutedEventArgs e)
         {
             isButtonPressed = true;
-            this.DialogResult = true;
+            DialogResult = true;
         }
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
             isButtonPressed = true;
             isCanceled = true;
-            this.Close();
+            Close();
         }
 
         public string Password
