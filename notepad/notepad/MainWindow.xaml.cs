@@ -58,6 +58,7 @@ namespace notepad
         string password = "";
         bool isChanged = false;
         string txt;
+        double tmp;
         TextDoc doc;
         SaveFileDialog saveFileDialog;
         BinaryFormatter formatter = new BinaryFormatter();
@@ -291,15 +292,17 @@ namespace notepad
 
         private void kegelPlus_Click(object sender, RoutedEventArgs e)
         {
-            kegel++;
+            tmp = Convert.ToDouble(kegelTextBox.Text);
+            tmp++;
+            kegelTextBox.Text = Convert.ToString(tmp);
             kegelChanged();
         }
 
         private void kegelMinus_Click(object sender, RoutedEventArgs e)
         {
-            kegel--;
-
-            MessageBox.Show(Convert.ToString(kegel));
+            tmp = Convert.ToDouble(kegelTextBox.Text);
+            tmp--;
+            kegelTextBox.Text = Convert.ToString(tmp);
             kegelChanged();
         }
 
