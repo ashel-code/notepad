@@ -18,11 +18,10 @@ using System.IO; // библиотека для работы с файлами
 using System.Runtime.Serialization.Formatters.Binary; // библиотека для сериализации
 
 namespace notepad
-{
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
-    /// 
+{/// <summary>
+ /// Логика взаимодействия для MainWindow.xaml
+ /// </summary>
+ /// 
     [Serializable]
     class TextDoc // объект текстового документа
     {
@@ -32,7 +31,7 @@ namespace notepad
         public bool isEncrypted { get; set; }
         public string password { get; set; }
 
-        public TextDoc (string text, double kegel, int font, bool isEncrypted)
+        public TextDoc(string text, double kegel, int font, bool isEncrypted)
         {
             this.text = text;
             this.kegel = kegel;
@@ -66,46 +65,7 @@ namespace notepad
         string filename;
         Nullable<bool> resultOpenDialog;
         Window1 passwordWindow;
-
-        public MainWindow()
-        {
-            InitializeComponent();
-            isEncryptedLabel.Content = "не зашифрован";
-            isChanged = false;
-            firstFont.IsChecked = true;
-        }
-
-        private void saveFunc()
-        {
-            isChanged = false;
-            saveFileDialog = new SaveFileDialog();
-
-            saveFileDialog.Filter = "Текстовый документ (*.notepad)|*.notepad";
-
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                txt = new TextRange(mainRichTextBox.Document.ContentStart, mainRichTextBox.Document.ContentEnd).Text;
-                if (password != "")
-                {
-                    doc = new TextDoc(txt, kegel, font, true, password);
-                    using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
-                    {
-                        formatter.Serialize(fs, doc);
-                    }
-                    
-                }
-                else
-                {
-                    doc = new TextDoc(txt, kegel, font, false);
-                    using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
-                    {
-                        formatter.Serialize(fs, doc);
-                    }
-                }
-
-            }
-        }
-
+        /// <summary>            jkjhgouyihj[ougihnjmoug87ph8uoiugtf687y67ty98765rder6t
         private void kegelChanged()
         {
             if (kegelTextBox.Text != "" && kegelTextBox.Text != "0")
@@ -117,6 +77,7 @@ namespace notepad
                     {
                         kegel = Convert.ToInt32(kegelTextBox.Text);
                         mainRichTextBox.FontSize = kegel;
+                        
                     }
                     else
                     {
@@ -137,7 +98,36 @@ namespace notepad
                 mainRichTextBox.FontSize = 1;
             }
         }
+        private void saveFunc()
+        {
+            isChanged = false;
+            saveFileDialog = new SaveFileDialog();
 
+            saveFileDialog.Filter = "Текстовый документ (*.notepad)|*.notepad";
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                txt = new TextRange(mainRichTextBox.Document.ContentStart, mainRichTextBox.Document.ContentEnd).Text;
+                if (password != "")
+                {
+                    doc = new TextDoc(txt, kegel, font, true, password);
+                    using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
+                    {
+                        formatter.Serialize(fs, doc);
+                    }
+
+                }
+                else
+                {
+                    doc = new TextDoc(txt, kegel, font, false);
+                    using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
+                    {
+                        formatter.Serialize(fs, doc);
+                    }
+                }
+
+            }
+        }
         private void saveButton_Click(object sender, RoutedEventArgs e)                            // сохранить
         {
             saveFunc();
